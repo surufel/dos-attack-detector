@@ -1,0 +1,20 @@
+#!/bin/bash
+echo "[*] Monitoring traffic for SYN package flooding . . ."
+THRESHOLD=20
+COOLDOWN=2
+LOG_FILE="/var/log/dos_detection.log"
+
+while true; do
+    TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S') # switch to TIMESTAMP=$(date '%d-%m-%Y %H:%M:S') for DAY/MONTH/YEAR time pattern
+    SYN_COUNT=$(ss -tn state syn-recv | wc -l)
+    
+    echo -n "[/] SYN_RECV Total: $SYN_COUNT"
+    
+    if [ "$SYN_COUNT" -gt "$THRESHOLD" ]; then
+        echo "[!] WARNING: Possible DoS has been detected at: "$TIMESTAMP". SYN COUNT: $SYN_COUNT" | tee -a "$LOG_FILE"
+    else
+        echo "[*] Normal traffic. SYN COUNT: $SYN_COUNT"
+    fi
+    sleep "$COOLDOWN"
+done
+
