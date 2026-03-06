@@ -6,7 +6,7 @@ LOG_FILE="/var/log/dos_detection.log"
 
 while true; do
     TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S') # switch to TIMESTAMP=$(date '%d-%m-%Y %H:%M:S') for DAY/MONTH/YEAR time pattern
-    SYN_COUNT=$(ss -tn state syn-recv | wc -l)
+    SYN_COUNT=$(ss -tn state syn-recv | tail -n +2 | wc -l)
     
     echo -n "[*] SYN_RECV Total: $SYN_COUNT "
     
