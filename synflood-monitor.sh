@@ -10,16 +10,17 @@ if ! touch "$LOG_FILE" 2>/dev/null; then
     exit 1
 fi
 
+# Interrupting program with (CTRL+C)
+trap "echo; echo '[*] Monitoring stopped.'; exit 0" SIGINT SIGTERM
+
 while true; do
-    TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S') # switch to TIMESTAMP=$(date '%d-%m-%Y %H:%M:S') for DAY/MONTH/YEAR time pattern
+    TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S') # switch to TIMESTAMP=$(date '+%d-%m-%Y %H:%M:%S') for DAY/MONTH/YEAR time pattern
     SYN_COUNT=$(ss -tn state syn-recv | tail -n +2 | wc -l)
     
-    echo -n "[*] SYN_RECV Total: $SYN_COUNT "
-    
     if [ "$SYN_COUNT" -gt "$THRESHOLD" ]; then
-        echo "[!] WARNING: Possible DoS has been detected at: "$TIMESTAMP". SYN COUNT: $SYN_COUNT" | tee -a "$LOG_FILE"
+        echo "[!] WARNING: Possible DoS has been detected at: $TIMESTAMP. SYN COUNT: $SYN_COUNT | tee -a $LOG_FILE"
     else
-        echo "| [OK] Normal traffic. No threats detected."
+        echo "[OK] Total SYN_RECV Count: $SYN_COUNT. No threats detected."
     fi
     sleep "$COOLDOWN"
 done
