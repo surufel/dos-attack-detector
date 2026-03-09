@@ -8,19 +8,25 @@ A Bash script for real-time SYN Flood attack detection.
 
 ## Overview
 
-SYN Flood is a type of DoS (Denial of Service) attack that exploits the three-way handshake. The attacker sends a high volume of SYN packets but never completes the handshake, leaving the server with multiple half-open connections in `SYN_RECV` state until its resources are exhausted.
-
-This script continuously monitors the number of `SYN_RECV` connections and triggers an alert when the threshold is exceeded.
+SYN Flood is a type of DoS (Denial of Service) attack that exploits the three-way handshake. The attacker sends a high volume of SYN packets but deliberately never completes the handshake, exhausting the server's resources and preventing legitimate connections from being established. This script monitors incoming SYN packets in real-time using `tcpdump` and triggers an alert when the count exceeds a threshold.
 
 ## Dependencies
 
-- `ss` (`iproute2`, available by default on most distros)
+Fedora/RHEL/CentOS:
+```bash
+sudo dnf install tcpdump
+```
+
+Ubuntu/Debian:
+```bash
+sudo apt install tcpdump
+```
 
 ## Configuration
 
 | Variable | Default | Description |
 |---|---|---|
-| `THRESHOLD` | `20` | SYN_RECV count to trigger an alert |
+| `THRESHOLD` | `250` | SYN count to trigger an alert |
 | `COOLDOWN` | `2` | Seconds between each check |
 | `LOG_FILE` | `/var/log/dos-detection.log` | Log output path |
 
@@ -29,10 +35,6 @@ This script continuously monitors the number of `SYN_RECV` connections and trigg
 ```bash
 sudo ./synflood-monitor.sh
 ```
-
-## Limitations
-
-- Does not automatically block IPs for now.
 
 ---
 ---
@@ -43,19 +45,25 @@ Script Bash para detecção em tempo real de ataques SYN Flood.
 
 ## Visão Geral
 
-SYN Flood é um tipo de ataque DoS (Negação de Serviço) que explora o three-way handshake. O atacante envia um alto volume de pacotes SYN mas nunca conclui o handshake, deixando o servidor com múltiplas conexões semi-abertas no estado `SYN_RECV` até esgotar seus recursos.
-
-Este script monitora continuamente a quantidade de conexões `SYN_RECV` e emite um alerta quando o limite é ultrapassado.
+SYN Flood é um tipo de ataque DoS (Negação de Serviço) que explora o three-way handshake. O atacante envia um alto volume de pacotes SYN mas deliberadamente nunca conclui o handshake, esgotando os recursos do servidor e impedindo que conexões legítimas sejam estabelecidas. Este script monitora pacotes SYN em tempo real utilizando `tcpdump` e emite um alerta quando a contagem ultrapassa o limite.
 
 ## Dependências
 
-- `ss` (`iproute2`, disponível por padrão na maioria das distros)
+Fedora/RHEL/CentOS:
+```bash
+sudo dnf install tcpdump
+```
+
+Ubuntu/Debian:
+```bash
+sudo apt install tcpdump
+```
 
 ## Configuração
 
 | Variável | Padrão | Descrição |
 |---|---|---|
-| `THRESHOLD` | `20` | Quantidade de SYN_RECV para disparar alerta |
+| `THRESHOLD` | `250` | Contagem de SYN para disparar o alerta |
 | `COOLDOWN` | `2` | Segundos entre cada verificação |
 | `LOG_FILE` | `/var/log/dos-detection.log` | Caminho do arquivo de log |
 
@@ -65,6 +73,3 @@ Este script monitora continuamente a quantidade de conexões `SYN_RECV` e emite 
 sudo ./synflood-monitor.sh
 ```
 
-## Limitações
-
-- Não bloqueia IPs automaticamente por agora.
