@@ -17,7 +17,7 @@ while true; do
     TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S') # switch to TIMESTAMP=$(date '+%d-%m-%Y %H:%M:%S') for DAY/MONTH/YEAR time pattern
     SYN_COUNT=$(sudo timeout "$COOLDOWN" tcpdump -i any -nn 'tcp[tcpflags] & tcp-syn != 0 and tcp[tcpflags] & tcp-ack == 0' 2>/dev/null | grep -c '^[0-9]') 
     if [ "$SYN_COUNT" -gt "$THRESHOLD" ]; then
-        echo "[!] WARNING: Possible DoS has been detected at: $TIMESTAMP. SYN COUNT: $SYN_COUNT | tee -a $LOG_FILE"
+        echo "[!] WARNING: Possible DoS detected at: $TIMESTAMP | SYN COUNT: $SYN_COUNT" | tee -a "$LOG_FILE"
     else
         echo "[OK] Total SYN Count: $SYN_COUNT. No threats detected."
     fi
